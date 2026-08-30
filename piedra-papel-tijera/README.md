@@ -1,56 +1,121 @@
-# Welcome to your Expo app 👋
+# Piedra, Papel, Tijeras
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicación móvil desarrollada con React Native + Expo para jugar al clásico juego de piedra, papel y tijeras.
 
-## Get started
+## Descripción
 
-1. Install dependencies
+La app permite:
 
-   ```bash
-   npm install
-   ```
+- elegir entre piedra, papel o tijeras
+- generar una elección aleatoria de la computadora
+- comparar jugadas y determinar el ganador
+- actualizar el marcador del jugador y la computadora
+- mostrar el resultado de cada ronda
 
-2. Start the app
+La lógica principal del juego está separada por capas para mantener el proyecto ordenado y fácil de extender.
 
-   ```bash
-   npx expo start
-   ```
+## Stack tecnológico
 
-In the output, you'll find options to open the app in a
+- React Native
+- Expo
+- Expo Router
+- TypeScript
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Estructura del proyecto
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```text
+piedra-papel-tijera/
+├── app.json
+├── package.json
+├── tsconfig.json
+├── README.md
+├── assets/
+│   └── images/
+│       ├── piedra.jpg
+│       ├── papel.jpg
+│       ├── tijeras.jpg
+│       └── ...
+├── src/
+│   ├── app/
+│   │   ├── _layout.tsx
+│   │   └── index.tsx
+│   ├── components/
+│   │   ├── ChoiceButtons.tsx
+│   │   ├── Header.tsx
+│   │   ├── ResultDisplay.tsx
+│   │   └── ScoreBoard.tsx
+│   ├── game/
+│   │   ├── choices.ts
+│   │   ├── gameLogic.ts
+│   │   └── types.ts
+│   ├── hooks/
+│   │   └── useGame.ts
+│   └── ...
+└── scripts/
+    └── reset-project.js
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Componentes principales
 
-### Other setup steps
+### Pantalla principal
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+- [src/app/index.tsx](src/app/index.tsx): pantalla principal del juego, donde se arma la interfaz y se conectan los componentes.
 
-## Learn more
+### Juego
 
-To learn more about developing your project with Expo, look at the following resources:
+- [src/game/gameLogic.ts](src/game/gameLogic.ts): lógica para elegir la jugada de la computadora y decidir el ganador.
+- [src/game/types.ts](src/game/types.ts): tipos TypeScript para las opciones y resultados.
+- [src/game/choices.ts](src/game/choices.ts): mapeo entre cada opción y su imagen asociada.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Estado
 
-## Join the community
+- [src/hooks/useGame.ts](src/hooks/useGame.ts): hook que controla el marcador y el resultado de cada partida.
 
-Join our community of developers creating universal apps.
+### UI
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- [src/components/Header.tsx](src/components/Header.tsx): cabecera de la app.
+- [src/components/ScoreBoard.tsx](src/components/ScoreBoard.tsx): mostrador de puntos del jugador y la computadora.
+- [src/components/ChoiceButtons.tsx](src/components/ChoiceButtons.tsx): botones con las imágenes de piedra, papel y tijeras.
+- [src/components/ResultDisplay.tsx](src/components/ResultDisplay.tsx): muestra si el usuario ganó, perdió o empató.
+
+## Flujo del juego
+
+1. El usuario elige una jugada.
+2. La computadora elige aleatoriamente una opción.
+3. Se compara la elección del jugador con la de la computadora.
+4. Se actualiza el marcador.
+5. Se muestra el resultado final de la ronda.
+
+## Requisitos
+
+- Node.js 18+
+- npm o yarn
+- Expo CLI
+- Android Studio / iOS Simulator o Expo Go para ejecutar la app en un dispositivo
+
+## Instalación
+
+```bash
+npm install
+```
+
+## Ejecución
+
+Iniciar la app en modo desarrollo:
+
+```bash
+npm start
+```
+
+## Funcionalidades actuales
+
+- Marcador de puntos
+- Elección aleatoria de la computadora
+- Resultado por ronda
+- Interfaz simple y responsiva
+- Uso de imágenes para cada opción
+
+## Autor
+
+Valeria Berenice Castellanos Murillo
+
