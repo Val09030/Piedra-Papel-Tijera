@@ -1,98 +1,244 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+type Choice = 'piedra' | 'papel' | 'tijeras';
 
 export default function HomeScreen() {
+  const [jugador, setJugador] = useState(0);
+  const [computadora, setComputadora] = useState(0);
+
+  const [jugadaComputadora, setJugadaComputadora] =
+    useState<Choice>('piedra');
+
+  const [resultado, setResultado] = useState('R: JUGADOR');
+
+  const jugar = (eleccion: Choice) => {
+    const opciones: Choice[] = ['piedra', 'papel', 'tijeras'];
+
+    const aleatoria =
+      opciones[Math.floor(Math.random() * opciones.length)];
+
+    setJugadaComputadora(aleatoria);
+
+    if (eleccion === aleatoria) {
+      setResultado('EMPATE');
+      return;
+    }
+
+    const ganaJugador =
+      (eleccion === 'piedra' && aleatoria === 'tijeras') ||
+      (eleccion === 'papel' && aleatoria === 'piedra') ||
+      (eleccion === 'tijeras' && aleatoria === 'papel');
+
+    if (ganaJugador) {
+      setJugador((puntos) => puntos + 1);
+      setResultado('R: JUGADOR');
+    } else {
+      setComputadora((puntos) => puntos + 1);
+      setResultado('R: COMPUTADORA');
+    }
+  };
+
+  const mostrarJugada = (jugada: Choice) => {
+    switch (jugada) {
+      case 'piedra':
+        return '✊';
+      case 'papel':
+        return '✋';
+      case 'tijeras':
+        return '✌️';
+    }
+  };
+
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <SafeAreaView style={styles.container}>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+      {/* Barra superior */}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>PPT</Text>
+      </View>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+      {/* Contenido */}
+      <View style={styles.content}>
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+        {/* Título */}
+        <Text style={styles.title}>
+          Piedra, Papel, Tijeras
+        </Text>
+
+        {/* Marcador */}
+        <View style={styles.scoreContainer}>
+
+          <View style={styles.scoreColumn}>
+            <Text style={styles.scoreTitle}>
+              Jugador
+            </Text>
+
+            <Text style={styles.score}>
+              {jugador}
+            </Text>
+          </View>
+
+          <View style={styles.scoreColumn}>
+            <Text style={styles.scoreTitle}>
+              Computadora
+            </Text>
+
+            <Text style={styles.score}>
+              {computadora}
+            </Text>
+          </View>
+
+        </View>
+
+        {/* Jugada de la computadora */}
+        <View style={styles.computerChoice}>
+          <Text style={styles.hand}>
+            {mostrarJugada(jugadaComputadora)}
+          </Text>
+        </View>
+
+        {/* Opciones del jugador */}
+        <View style={styles.options}>
+
+          <TouchableOpacity
+            style={styles.choiceButton}
+            onPress={() => jugar('papel')}
+          >
+            <Text style={styles.hand}>
+              ✋
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.choiceButton}
+            onPress={() => jugar('tijeras')}
+          >
+            <Text style={styles.hand}>
+              ✌️
+            </Text>
+          </TouchableOpacity>
+
+        </View>
+
+        {/* Resultado */}
+        <View style={styles.resultContainer}>
+          <Text style={styles.resultText}>
+            {resultado}
+          </Text>
+        </View>
+
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#ffffff',
+  },
+
+  header: {
+    height: 66,
+    backgroundColor: '#5d3793',
     justifyContent: 'center',
-    flexDirection: 'row',
+    paddingHorizontal: 16,
+    elevation: 4,
   },
-  safeArea: {
+
+  headerText: {
+    color: '#ffffff',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+
+  content: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
     alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    paddingTop: 18,
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
+
   title: {
+    fontSize: 22,
+    color: '#222222',
+    marginBottom: 24,
+  },
+
+  scoreContainer: {
+    width: '90%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 36,
+  },
+
+  scoreColumn: {
+    width: '48%',
+    alignItems: 'center',
+  },
+
+  scoreTitle: {
+    fontSize: 14,
+    color: '#777777',
+    marginBottom: 10,
+  },
+
+  score: {
+    width: '100%',
     textAlign: 'center',
+    fontSize: 17,
+    color: '#aaaaaa',
+    borderBottomWidth: 1,
+    borderBottomColor: '#bbbbbb',
+    paddingBottom: 4,
   },
-  code: {
-    textTransform: 'uppercase',
+
+  computerChoice: {
+    width: 140,
+    height: 82,
+    backgroundColor: '#d6d6d6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 2,
+    marginBottom: 12,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+
+  options: {
+    width: '90%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  choiceButton: {
+    width: '48%',
+    height: 82,
+    backgroundColor: '#d6d6d6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 2,
+  },
+
+  hand: {
+    fontSize: 48,
+  },
+
+  resultContainer: {
+    position: 'absolute',
+    bottom: 24,
+    backgroundColor: '#eeeeee',
+    paddingHorizontal: 24,
+    paddingVertical: 14,
+    borderRadius: 25,
+  },
+
+  resultText: {
+    fontSize: 13,
+    color: '#222222',
   },
 });
